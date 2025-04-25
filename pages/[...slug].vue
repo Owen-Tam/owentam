@@ -6,11 +6,7 @@
 </template>
 <script setup>
 useHead({
-  meta: [
-    {
-      title: "404 - Owen Tam",
-    },
-  ],
+  title: "404 - Owen Tam",
 });
 </script>
 <style scoped>

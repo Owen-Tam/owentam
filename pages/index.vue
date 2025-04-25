@@ -27,11 +27,7 @@
 </template>
 <script setup>
 useHead({
-  meta: [
-    {
-      title: "Landing - Owen Tam",
-    },
-  ],
+  title: "Landing - Owen Tam",
 });
 </script>
 <style scoped>

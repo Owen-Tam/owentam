@@ -32,11 +32,7 @@
 </template>
 <script setup>
 useHead({
-  meta: [
-    {
-      title: "Blog - Owen Tam",
-    },
-  ],
+  title: "Blog - Owen Tam",
 });
 
 const { data: CTF } = await useAsyncData("CTF", () =>

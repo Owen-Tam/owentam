@@ -27,9 +27,9 @@ const { data: blogPage } = await useAsyncData("yeet", () =>
 if (!blogPage.value) {
   navigateTo("/404");
 }
-// definePageMeta({
-//   title: `${blogPage.value.title}`,
-// });
+useHead({
+  title: `${blogPage.value.title} - Owen Tam`,
+});
 const headings = blogPage.value.body.value.filter(
   (item) => item[0] === "h1" || item[0] === "h2" || item[0] === "h3"
 );

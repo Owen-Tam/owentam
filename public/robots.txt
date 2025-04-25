@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow:
+
+There is no flag here

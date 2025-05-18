@@ -12,9 +12,9 @@
 </template>
 
 <script setup>
-const completed = ref(true);
+const completed = ref(false);
 let time = ref(3);
-const link = ref("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+const link = ref("https://www.owentam.dev");
 if (completed.value) {
   setTimeout(() => {
     try {

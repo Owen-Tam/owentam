@@ -22,6 +22,9 @@ const generate = computed(
 );
 </script>
 <style scoped>
+h2 {
+  margin-block: 2rem;
+}
 h2::after {
   content: "";
   display: block;

@@ -51,7 +51,6 @@ const show = computed(() => {
 
   return blog;
 });
-
 const categoryData = ref({
   articles: { selected: true, data: articles },
   CTF: { selected: true, data: CTF },

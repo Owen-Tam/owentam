@@ -60,7 +60,7 @@ const copyCode = (): void => {
 .pre {
   overflow-x: hidden;
   border-radius: 6px;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   background-color: hsl(223, 20%, 15%);
   border: 1px solid var(--background-color-lighter);
 
@@ -131,6 +131,7 @@ const copyCode = (): void => {
 
       &::before {
         content: attr(line);
+        width: 1rem;
         color: var(--light-main-opacity);
         padding-right: 1.25rem;
         display: inline-block;

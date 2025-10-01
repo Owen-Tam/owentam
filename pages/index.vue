@@ -4,7 +4,7 @@
       <h1>Hi, I am <span class="introduction--highlight">Owen Tam</span>.</h1>
       <p>
         I am a secondary school student in Hong Kong interested in Innovation &
-        Technology.
+        Technology and digital security.
       </p>
       <p>
         My passion for technology stems from a fascination with how innovative

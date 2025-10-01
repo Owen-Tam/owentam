@@ -41,7 +41,7 @@ h4,
 h5,
 h6,
 li {
-  font-family: "Raleway", sans-serif;
+  font-family: "Poppins", sans-serif;
   color: var(--light-main);
 }
 

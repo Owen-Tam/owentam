@@ -31,6 +31,10 @@ export default defineNuxtConfig({
         wght: "300..800",
         ital: "300..800",
       },
+      Inter: {
+        wght: "300..800",
+        ital: "300..800",
+      },
     },
   },
   content: {
@@ -38,6 +42,7 @@ export default defineNuxtConfig({
       markdown: {
         highlight: {
           theme: "one-dark-pro",
+          langs: ["json", "cpp", "java", "py", "c", "asm"],
         },
       },
     },

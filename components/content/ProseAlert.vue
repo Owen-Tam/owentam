@@ -65,7 +65,7 @@ const icon = computed(() => {
   background-color: #272927;
   color: var(--warning);
   border: 1px solid
-    color-mix(in srgb, var(--background-color-lighter) 75%, var(--warning));
+    color-mix(in srgb, var(--background-color-lighter), var(--warning));
 }
 
 .prose-alert--error {

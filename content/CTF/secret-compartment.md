@@ -365,3 +365,33 @@ Stack level 0, frame at 0x7fffffffdc60:
 ```
 
 Crucially, rip is stored at `0x7fffffffdc58`. Subtracting this from the input buffer address, we know the return address is `0x98` bytes after the input buffer, or `0x10` bytes after the canary.
+
+We may represent the stack as below:
+
+::ProseImg{src="stack" alt="stack_illustration"}
+::
+
+To hijack the execution flow:
+
+- overflow the input buffer by 0x88 to reach the canary
+- replace the canary with the leaked one
+- fill `0x10-0x8` more bytes to reach the RIP (`0x8` is subtracted as that is already filled by the canary)
+- overflow the RIP
+
+Using pwntools, the payload looks like:
+
+```py [solve.py]
+payload = b'a'*0x88 + leaked_canary + b'b'*(0x10-8)+hijack_to_address
+```
+
+Now that we can hikack the execution flow, we just need to direct RIP to the shellcode.
+
+Where should we put the shellcode? **Notice that we still haven't used the first leaked address yet, which is to the input buffer.**
+
+We can simply put our shellcode in the input buffer, so if we redirect execution flow back to the input buffer, then the shellcode will run.
+
+```py [solve.py]
+payload = shellcode + b'a'*(0x88-len(shellcode)) + leaked_canary + b'b'*(0x10-8)+leaked_input_buffer
+```
+
+The shellcode should execute. However...

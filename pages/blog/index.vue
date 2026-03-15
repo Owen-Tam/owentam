@@ -36,10 +36,10 @@ useHead({
 });
 
 const { data: CTF } = await useAsyncData("CTF", () =>
-  queryCollection("CTF").all()
+  queryCollection("CTF").all(),
 );
 const { data: articles } = await useAsyncData("articles", () =>
-  queryCollection("articles").all()
+  queryCollection("articles").all(),
 );
 const show = computed(() => {
   const blog = [];

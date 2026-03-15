@@ -39,7 +39,7 @@ useHead({
   title: `${blogPage.value.title} - Owen Tam`,
 });
 const headings = blogPage.value.body.value.filter(
-  (item) => item[0] === "h1" || item[0] === "h2" || item[0] === "h3"
+  (item) => item[0] === "h1" || item[0] === "h2" || item[0] === "h3",
 );
 
 const activeSection = ref([]);
@@ -50,17 +50,23 @@ let observer = null;
 onMounted(() => {
   const options = {};
   const headingsElements = document.querySelectorAll(
-    ".content h1, .content h2, .content h3"
+    ".content h1, .content h2, .content h3",
   );
+  let previousSection = null;
   observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const heading = document.querySelector(`a[href='#${entry.target.id}']`);
       if (entry.isIntersecting) {
         // Add to activeSection if in view
         heading.classList.add("active");
-      } else {
-        // Remove active if not in view
-        heading.classList.remove("active");
+        previousSection = heading;
+      }
+    });
+
+    const links = document.querySelectorAll(".headings li a");
+    links.forEach((link) => {
+      if (link !== previousSection) {
+        link.classList.remove("active");
       }
     });
   }, options);

@@ -3,8 +3,8 @@
     <div class="introduction">
       <h1>Hi, I am <span class="introduction--highlight">Owen Tam</span>.</h1>
       <p>
-        I am a freshman at Princeton University interested in innovation and
-        security.
+        I am a freshman at Princeton University interested in innovation and AI
+        safety.
       </p>
       <p>
         My passion for technology stems from my mission to develop ethical

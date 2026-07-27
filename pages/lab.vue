@@ -31,7 +31,7 @@
           <button class="modal__close" @click="selectedItem = null">
             &times;
           </button>
-          <NuxtImg
+          <img
             :src="selectedItem.image"
             :alt="selectedItem.title"
             class="modal__image"

@@ -24,9 +24,7 @@ export default defineNuxtConfig({
     "@nuxtjs/mdc",
     "@nuxt/image",
   ],
-  image: {
-    provider: "ipx",
-  },
+
   googleFonts: {
     display: "swap",
     families: {

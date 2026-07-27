@@ -1,6 +1,6 @@
 <template>
   <div class="lab-card" :class="`lab-card--${aspect}`" @click="openModal">
-    <NuxtImg :src="item.image" :alt="item.title" loading="lazy" />
+    <img :src="item.image" :alt="item.title" loading="lazy" />
   </div>
 </template>
 

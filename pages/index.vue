@@ -3,8 +3,8 @@
     <div class="introduction">
       <h1>Hi, I am <span class="introduction--highlight">Owen Tam</span>.</h1>
       <p>
-        I am a secondary school student in Hong Kong interested in I&T and
-        digital security.
+        I am a freshman at Princeton University interested in innovation and
+        security.
       </p>
       <p>
         My passion for technology stems from my mission to develop ethical

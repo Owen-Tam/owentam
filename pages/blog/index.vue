@@ -68,7 +68,7 @@ const toggleCategory = function (cat) {
 </script>
 <style scoped lang="scss">
 h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 .page__introduction {
   margin-bottom: 2rem;
@@ -110,7 +110,7 @@ h1 {
   margin-top: 1rem;
   h3 {
     margin-bottom: 0.2rem;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
   .item__date {
     color: var(--light-main-opacity);
@@ -118,8 +118,8 @@ h1 {
   .item__description {
     margin-block: 0.8rem;
   }
-}
-.card:hover h3 {
-  text-decoration: underline;
+  h3:hover {
+    text-decoration: underline;
+  }
 }
 </style>

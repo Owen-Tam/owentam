@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <p>Designed with ❤️ | Copyright © 2026 Owen Tam Design Limited</p>
+    <p>Copyright © 2025 Owen Tam Design Limited</p>
   </footer>
 </template>
 

@@ -48,28 +48,8 @@ onMounted(() => {
   const headingsElements = document.querySelectorAll(
     ".content h1, .content h2, .content h3",
   );
-<<<<<<< HEAD
-  let previousSection = null;
-  observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const heading = document.querySelector(`a[href='#${entry.target.id}']`);
-      if (entry.isIntersecting) {
-        // Add to activeSection if in view
-        heading.classList.add("active");
-        previousSection = heading;
-      }
-    });
 
-    const links = document.querySelectorAll(".headings li a");
-    links.forEach((link) => {
-      if (link !== previousSection) {
-        link.classList.remove("active");
-      }
-    });
-  }, options);
-=======
   const allLinks = document.querySelectorAll(".headings a[href^='#']");
->>>>>>> writeup
 
   const updateActiveHeading = () => {
     const offset = 120;

@@ -34,6 +34,9 @@
           <img
             :src="selectedItem.image"
             :alt="selectedItem.title"
+            width="500"
+            height="500"
+            decoding="async"
             class="modal__image"
           />
           <div class="modal__details">
@@ -77,42 +80,42 @@ const labItems = [
   {
     title: "Untitled",
     description: "An artefact claimed by time — and a chicken. (64x64)",
-    image: "/lab/car.png",
+    image: "/lab/car.webp",
     aspect: "square",
   },
   {
     title: "Voice from the Outer World",
     description:
       "A vast desert landscape interrupted by industrial structures. (128x180)",
-    image: "/lab/desert.png",
+    image: "/lab/desert.webp",
     aspect: "portrait",
   },
   {
     title: "Quid in silva est?",
     description:
       "Can you believe the rock is modelled after my face? Me neither. (188x188)",
-    image: "/lab/forest.png",
+    image: "/lab/forest.webp",
     aspect: "square",
   },
   {
     title: "The Island ",
     description:
       "One might wonder if the inhabitants of The Island, chained to the ground, are prisoners or masters of their predicament. (64x64)",
-    image: "/lab/island.png",
+    image: "/lab/island.webp",
     aspect: "square",
   },
   {
     title: "Cat on a rock",
     description:
       "Is it a cat? Is it a fox? No, it's a cat on a rock. (100x100)",
-    image: "/lab/rock.png",
+    image: "/lab/rock.webp",
     aspect: "square",
   },
   {
     title: "A tree and a scene",
     description:
       "The audience questions if it is a sunset or a sunrise. (150x150)",
-    image: "/lab/tree.png",
+    image: "/lab/tree.webp",
     aspect: "square",
   },
 ];
@@ -224,9 +227,11 @@ h1 {
 
 .modal__image {
   width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
+  max-height: 500px;
+  object-fit: contain;
   display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .modal__details {

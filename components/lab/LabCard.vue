@@ -1,6 +1,13 @@
 <template>
   <div class="lab-card" :class="`lab-card--${aspect}`" @click="openModal">
-    <img :src="item.image" :alt="item.title" loading="lazy" />
+    <img
+      :src="item.image"
+      :alt="item.title"
+      :width="item.aspect === 'portrait' ? 570 : 800"
+      :height="item.aspect === 'portrait' ? 800 : 800"
+      loading="lazy"
+      decoding="async"
+    />
   </div>
 </template>
 
@@ -50,5 +57,7 @@ img {
   height: 100%;
   object-fit: cover;
   display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 </style>

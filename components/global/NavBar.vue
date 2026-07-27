@@ -3,6 +3,7 @@
     <ul class="nav__body">
       <li><NuxtLink to="/">Home</NuxtLink></li>
       <li><NuxtLink to="/projects">Projects</NuxtLink></li>
+      <li><NuxtLink to="/lab">Lab</NuxtLink></li>
       <li><NuxtLink to="/blog">Blog</NuxtLink></li>
     </ul>
   </nav>

@@ -28,7 +28,7 @@ const projects = [
     problem:
       "Primary school students lack engaging ways to learn about cybersecurity and digital safety risks like deepfakes and AI threats.",
     solution:
-      "A gamified 5-level educational game built in Godot where players journey through 'Cyberia' to defeat the 'Malware Master', featuring auto-validated challenges and boss battles that test cybersecurity knowledge.",
+      "A gamified educational game built in Godot where players journey through 'Cyberia' to defeat the 'Malware Master', featuring auto-validated challenges and boss battles that test cybersecurity knowledge.",
   },
   {
     name: "Code Quest",

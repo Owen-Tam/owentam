@@ -42,40 +42,43 @@ const headings = blogPage.value.body.value.filter(
   (item) => item[0] === "h1" || item[0] === "h2" || item[0] === "h3"
 );
 
-const activeSection = ref([]);
-
-// Setup IntersectionObserver to update active section
-let observer = null;
+let scrollHandler = null;
 
 onMounted(() => {
-  const options = {};
   const headingsElements = document.querySelectorAll(
     ".content h1, .content h2, .content h3"
   );
-  observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const heading = document.querySelector(`a[href='#${entry.target.id}']`);
-      if (entry.isIntersecting) {
-        // Add to activeSection if in view
-        heading.classList.add("active");
-      } else {
-        // Remove active if not in view
-        heading.classList.remove("active");
-      }
-    });
-  }, options);
+  const allLinks = document.querySelectorAll(".headings a[href^='#']");
 
-  // Add each section to the observer
-  headingsElements.forEach((element) => {
-    if (element && observer) {
-      observer.observe(element);
+  const updateActiveHeading = () => {
+    const offset = 120;
+    const activeIds = new Set();
+    const levels = [];
+    for (const h of headingsElements) {
+      if (h.offsetTop <= window.scrollY + offset) {
+        const level = parseInt(h.tagName[1]);
+        while (levels.length && levels[levels.length - 1] >= level) {
+          levels.pop();
+          activeIds.delete(levels.pop());
+        }
+        levels.push(level);
+        activeIds.add(h.id);
+      }
     }
-  });
+    allLinks.forEach((link) => {
+      const id = link.getAttribute("href").slice(1);
+      link.classList.toggle("active", activeIds.has(id));
+    });
+  };
+
+  scrollHandler = () => requestAnimationFrame(updateActiveHeading);
+  window.addEventListener("scroll", scrollHandler, { passive: true });
+  updateActiveHeading();
 });
 
 onBeforeUnmount(() => {
-  if (observer) {
-    observer.disconnect();
+  if (scrollHandler) {
+    window.removeEventListener("scroll", scrollHandler);
   }
 });
 </script>
